@@ -1,0 +1,63 @@
+required_version: ">= 0.5.0"
+
+variables:
+  - name: ProjectName
+    description: Enter the name of your project (used for naming resources)
+    type: string
+    validations:
+      - required
+      - length-3-30
+      - alphanumeric
+
+  - name: Environment
+    description: Select the environment
+    type: enum
+    options:
+      - dev
+      - staging
+      - prod
+    default: dev
+
+  - name: AWSRegion
+    description: Enter the AWS region
+    type: string
+    default: "us-west-2"
+    validations:
+      - required
+
+  - name: VPCCidr
+    description: Enter the VPC CIDR block
+    type: string
+    default: "10.0.0.0/16"
+
+  - name: S3BucketPurpose
+    description: What will this S3 bucket be used for?
+    type: string
+    default: "data-storage"
+
+  - name: TerraformStateS3Bucket
+    description: Enter the S3 bucket name for Terraform state
+    type: string
+    validations:
+      - required
+
+  - name: TerraformStateDynamoDBTable
+    description: Enter the DynamoDB table name for state locking
+    type: string
+    default: "terraform-locks"
+
+hooks:
+  after:
+    - command: echo
+      args:
+        - "✅ Simple Terragrunt project '{{.ProjectName}}' has been generated!"
+        - ""
+        - "📁 Project structure:"
+        - "  - VPC with public/private subnets"
+        - "  - S3 bucket for {{.S3BucketPurpose}}"
+        - ""
+        - "🚀 Next steps:"
+        - "1. cd {{.ProjectName}}-{{.Environment}}"
+        - "2. Configure your AWS credentials"
+        - "3. Run 'terragrunt run-all plan' to see what will be created"
+        - "4. Run 'terragrunt run-all apply' to create the infrastructure"

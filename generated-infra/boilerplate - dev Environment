@@ -1,0 +1,194 @@
+This simple Terragrunt project was generated using Gruntwork's boilerplate tool.
+
+## 🏗️ Infrastructure Components
+
+### VPC (Virtual Private Cloud)
+- **CIDR Block**: 10.0.0.0/16
+- **Availability Zones**: us-west-2a, us-west-2b
+- **Subnets**: 2 public + 2 private subnets
+- **NAT Gateway**: Enabled for private subnet internet access
+- **DNS**: Hostnames and resolution enabled
+
+### S3 Bucket
+- **Purpose**: data-storage
+- **Encryption**: Server-side encryption enabled
+- **Public Access**: Blocked (secure by default)
+- **Versioning**: Disabled (development environment)
+
+## 📋 Configuration
+
+- **Project Name**: boilerplate
+- **Environment**: dev
+- **AWS Region**: us-west-2
+- **VPC CIDR**: 10.0.0.0/16
+- **State Bucket**: state
+- **State Lock Table**: locker
+
+## 🚀 Prerequisites
+
+1. **Terragrunt** installed - [Installation Guide](https://terragrunt.gruntwork.io/docs/getting-started/install/)
+2. **Terraform** installed - [Installation Guide](https://www.terraform.io/downloads.html)
+3. **AWS CLI** configured with appropriate credentials
+4. **S3 bucket** for Terraform state: `state`
+5. **DynamoDB table** for state locking: `locker`
+
+### Create State Management Resources
+
+If you haven't created the state management resources yet:
+
+```bash
+# Create S3 bucket for state
+aws s3 mb s3://state --region us-west-2
+
+# Enable versioning on state bucket
+aws s3api put-bucket-versioning \
+  --bucket state \
+  --versioning-configuration Status=Enabled
+
+# Create DynamoDB table for locking
+aws dynamodb create-table \
+  --table-name locker \
+  --attribute-definitions AttributeName=LockID,AttributeType=S \
+  --key-schema AttributeName=LockID,KeyType=HASH \
+  --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
+  --region us-west-2
+```
+
+## 🛠️ Deployment
+
+### Quick Start - Deploy Everything
+
+```bash
+# Plan all resources
+terragrunt run-all plan
+
+# Apply all resources
+terragrunt run-all apply
+
+# Check outputs
+terragrunt run-all output
+```
+
+### Step-by-Step Deployment
+
+```bash
+# 1. Deploy VPC first
+cd vpc
+terragrunt plan
+terragrunt apply
+
+# 2. Deploy S3 bucket
+cd ../s3
+terragrunt plan
+terragrunt apply
+```
+
+### View Outputs
+
+```bash
+# View VPC outputs
+cd vpc && terragrunt output
+
+# View S3 outputs  
+cd ../s3 && terragrunt output
+```
+
+## 🧹 Cleanup
+
+```bash
+# Destroy all resources (be careful!)
+terragrunt run-all destroy
+
+# Or destroy individually (reverse order)
+cd s3 && terragrunt destroy
+cd ../vpc && terragrunt destroy
+```
+
+## 📁 Project Structure
+
+```
+boilerplate-dev/
+├── terragrunt.hcl              # Root configuration
+├── environments/
+│   └── dev/
+│       ├── terragrunt.hcl      # Environment config
+│       ├── vpc/                # VPC module
+│       │   └── terragrunt.hcl
+│       └── s3/                 # S3 bucket module
+│           ├── terragrunt.hcl
+│           └── random.tf
+└── README.md
+```
+
+## 🔧 Customization
+
+To modify this infrastructure:
+
+1. **Change VPC settings**: Edit `environments/dev/vpc/terragrunt.hcl`
+2. **Modify S3 configuration**: Edit `environments/dev/s3/terragrunt.hcl`
+3. **Add more environments**: Copy the `dev` folder and modify values
+4. **Add more resources**: Create new folders under `environments/dev/`
+
+## 📚 Learn More
+
+- [Terragrunt Documentation](https://terragrunt.gruntwork.io/)
+- [Terraform AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
+- [AWS VPC Module](https://github.com/terraform-aws-modules/terraform-aws-vpc)
+- [AWS S3 Module](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket)
+- [Gruntwork Boilerplate](https://github.com/gruntwork-io/boilerplate)
+
+---
+
+*Generated with ❤️ using Gruntwork's boilerplate tool*
+```
+
+## 🎯 Usage Instructions
+
+### 1. Set up the boilerplate template
+
+Create a directory structure like this:
+
+```bash
+mkdir -p terragrunt-boilerplate/environments/dev/{vpc,s3}
+
+# Save the boilerplate.yml file
+# Save all the .tmpl files in their respective directories
+```
+
+### 2. Generate your project
+
+```bash
+# Interactive mode
+boilerplate \
+  --template-url ./terragrunt-boilerplate \
+  --output-folder ./my-simple-infrastructure
+
+# Non-interactive mode
+boilerplate \
+  --template-url ./terragrunt-boilerplate \
+  --output-folder ./my-simple-infrastructure \
+  --non-interactive \
+  --var ProjectName="TestApp" \
+  --var Environment="dev" \
+  --var AWSRegion="us-west-2" \
+  --var VPCCidr="10.0.0.0/16" \
+  --var S3BucketPurpose="app-data" \
+  --var TerraformStateS3Bucket="my-terraform-state-bucket-12345"
+```
+
+### 3. Deploy the infrastructure
+
+```bash
+cd my-simple-infrastructure
+terragrunt run-all plan
+terragrunt run-all apply
+```
+
+This simplified version is perfect for:
+- ✅ Learning Terragrunt and boilerplate
+- ✅ Testing the workflow
+- ✅ Demonstrating key concepts
+- ✅ Quick proof of concept
+- ✅ Foundation for expansion
+
+Much more manageable for testing! 🚀
