@@ -11,7 +11,6 @@ locals {
       
     region = "eu-west-1"
 
-    # Modules set true are ignored during Terraform run
     skip_module = {
         vpc = false
     } 
@@ -23,7 +22,7 @@ locals {
     vpc_create_egress_only_igw           = true
     vpc_enable_dns_hostnames             = true
     vpc_enable_dns_support               = true
-    availability_zone                    = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+    availability_zone                    = ["eu-west-1a", "eu-west-1b"]
 
 
     tags = {

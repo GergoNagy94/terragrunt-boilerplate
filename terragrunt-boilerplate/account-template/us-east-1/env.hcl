@@ -9,10 +9,9 @@ locals {
     account_id = local.account_vars.locals.account_id
     env        = local.account_vars.locals.account
       
-    region = "{{.RegionName}}"
+    region = "us-east-1"
 
-{{if .CreateVPC}}    # Modules set true are ignored during Terraform run
-    skip_module = {
+{{if .CreateVPC}}    skip_module = {
         vpc = false
     } 
 
@@ -23,7 +22,7 @@ locals {
     vpc_create_egress_only_igw           = true
     vpc_enable_dns_hostnames             = true
     vpc_enable_dns_support               = true
-    availability_zone                    = {{if eq .RegionName "us-east-1"}}["us-east-1a", "us-east-1b", "us-east-1c"]{{else if eq .RegionName "eu-west-1"}}["eu-west-1a", "eu-west-1b", "eu-west-1c"]{{else if eq .RegionName "eu-west-2"}}["eu-west-2a", "eu-west-2b", "eu-west-2c"]{{else}}["{{.RegionName}}a", "{{.RegionName}}b", "{{.RegionName}}c"]{{end}}
+    availability_zone                    = ["us-east-1a", "us-east-1b", "us-east-1c"]
 {{else}}    skip_module = {}
 {{end}}
 

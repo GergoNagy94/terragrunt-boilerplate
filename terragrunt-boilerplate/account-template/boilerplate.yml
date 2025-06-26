@@ -1,0 +1,22 @@
+variables:
+  - name: AccountName
+    type: string
+  - name: AccountId
+    type: string
+  - name: CreateVPC
+    type: bool
+    default: false
+  - name: VPCCidr
+    type: string
+    default: "10.0.0.0/16"
+  - name: IncludeEuWest1
+    type: bool
+    default: false
+
+skip_files:
+  - path: "us-east-1/vpc/terragrunt.hcl"
+    if: "{{ not .CreateVPC }}"
+  - path: "eu-west-1/**/*"
+    if: "{{ not .IncludeEuWest1 }}"
+  - path: "eu-west-1/vpc/terragrunt.hcl"
+    if: "{{ not .CreateVPC }}"

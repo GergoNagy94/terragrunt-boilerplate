@@ -9,21 +9,22 @@ locals {
     account_id = local.account_vars.locals.account_id
     env        = local.account_vars.locals.account
       
-    region = "us-east-1"
+    region = "eu-west-1"
 
-    skip_module = {
+{{if .CreateVPC}}    skip_module = {
         vpc = false
     } 
 
     # VPC variables
-    vpc_cidr                             = "10.0.0.0/16"
+    vpc_cidr                             = "{{.VPCCidr}}"
     vpc_nat_gateway                      = true
     vpc_single_nat_gateway               = true
     vpc_create_egress_only_igw           = true
     vpc_enable_dns_hostnames             = true
     vpc_enable_dns_support               = true
-    availability_zone                    = ["us-east-1a", "us-east-1b", "us-east-1c"]
-
+    availability_zone                    = ["eu-west-1a", "eu-west-1b"]
+{{else}}    skip_module = {}
+{{end}}
 
     tags = {
       createdBy       = "Terragrunt" 
