@@ -1,63 +1,129 @@
-required_version: ">= 0.5.0"
-
 variables:
   - name: ProjectName
-    description: Enter the name of your project (used for naming resources)
+    description: Enter the name of your project
     type: string
-    validations:
-      - required
-      - length-3-30
-      - alphanumeric
+    default: "terragrunt"
 
-  - name: Environment
-    description: Select the environment
-    type: enum
-    options:
-      - dev
-      - staging
-      - prod
-    default: dev
-
-  - name: AWSRegion
-    description: Enter the AWS region
+  - name: ProjectVersion
+    description: Enter the initial project version
     type: string
-    default: "us-west-2"
-    validations:
-      - required
+    default: "v1.0.0"
+
+  - name: OrganizationId
+    description: Enter your AWS Organization ID
+    type: string
+    default: "o-00000000000"
+
+  - name: OrganizationRootId
+    description: Enter your AWS Organization Root ID
+    type: string
+    default: "r-0000"
+
+  - name: DomainName
+    description: Enter your domain name for email addresses
+    type: string
+    default: "example.com"
+
+  - name: DevelopmentAccountId
+    description: Development AWS Account ID
+    type: string
+    default: "000000000000"
+
+  - name: ManagementAccountId
+    description: Management AWS Account ID
+    type: string
+    default: "000000000000"
+
+  - name: MonitoringAccountId
+    description: Monitoring AWS Account ID
+    type: string
+    default: "000000000000"
+
+  - name: ProductionAccountId
+    description: Production AWS Account ID
+    type: string
+    default: "000000000000"
+
+  - name: DefaultRegion
+    description: Enter the default AWS region
+    type: string
+    default: "us-east-1"
+
+  - name: StateRegion
+    description: Enter the AWS region for Terraform state storage
+    type: string
+    default: "us-east-1"
+
+  - name: CreateVPC
+    description: Create VPC configuration?
+    type: bool
+    default: true
 
   - name: VPCCidr
-    description: Enter the VPC CIDR block
+    description: VPC CIDR block
     type: string
     default: "10.0.0.0/16"
 
-  - name: S3BucketPurpose
-    description: What will this S3 bucket be used for?
-    type: string
-    default: "data-storage"
+skip_files:
+  - path: "./account-template/**/*"
 
-  - name: TerraformStateS3Bucket
-    description: Enter the S3 bucket name for Terraform state
-    type: string
-    validations:
-      - required
+dependencies:
+  - name: development
+    template-url: ./account-template
+    output-folder: ./live/development
+    variables:
+      - name: AccountName
+        default: "development"
+      - name: AccountId
+        default: "{{ .DevelopmentAccountId }}"
+      - name: CreateVPC
+        default: "true"
+      - name: VPCCidr
+        default: "{{ .VPCCidr }}"
+      - name: IncludeEuWest1
+        default: "true"
 
-  - name: TerraformStateDynamoDBTable
-    description: Enter the DynamoDB table name for state locking
-    type: string
-    default: "terraform-locks"
+  - name: management
+    template-url: ./account-template
+    output-folder: ./live/management
+    variables:
+      - name: AccountName
+        default: "management"
+      - name: AccountId
+        default: "{{ .ManagementAccountId }}"
+      - name: CreateVPC
+        default: "false"
+      - name: VPCCidr
+        default: "{{ .VPCCidr }}"
+      - name: IncludeEuWest1
+        default: "false"
 
-hooks:
-  after:
-    - command: echo
-      args:
-        - "✅ Simple Terragrunt project '{{.ProjectName}}' has been generated!"
-        - ""
-        - "📁 Project structure:"
-        - "  - VPC with public/private subnets"
-        - "  - S3 bucket for {{.S3BucketPurpose}}"
-        - ""
-        - "🚀 Next steps:"
-        - "1. cd {{.ProjectName}}-{{.Environment}}"
-        - "2. Configure your AWS credentials"
-        - "3. Run 'terragrunt run-all plan' to see what will be created"
-        - "4. Run 'terragrunt run-all apply' to create the infrastructure"
+  - name: monitoring
+    template-url: ./account-template
+    output-folder: ./live/monitoring
+    variables:
+      - name: AccountName
+        default: "monitoring"
+      - name: AccountId
+        default: "{{ .MonitoringAccountId }}"
+      - name: CreateVPC
+        default: "false"
+      - name: VPCCidr
+        default: "{{ .VPCCidr }}"
+      - name: IncludeEuWest1
+        default: "false"
+
+  - name: production
+    template-url: ./account-template
+    output-folder: ./live/production
+    variables:
+      - name: AccountName
+        default: "production"
+      - name: AccountId
+        default: "{{ .ProductionAccountId }}"
+      - name: CreateVPC
+        default: "false"
+      - name: VPCCidr
+        default: "{{ .VPCCidr }}"
+      - name: IncludeEuWest1
+        default: "false"
