@@ -30,7 +30,7 @@ variables:
     default: "000000000000"
 
   - name: ManagementAccountId
-    description: Management AWS Account ID  
+    description: Management AWS Account ID
     type: string
     default: "000000000000"
 
@@ -74,9 +74,9 @@ dependencies:
       - name: AccountId
         default: "{{ .DevelopmentAccountId }}"
       - name: CreateVPC
-        reference: CreateVPC
+        default: "{{ .CreateVPC }}"
       - name: VPCCidr
-        reference: VPCCidr
+        default: "{{ .VPCCidr }}"
       - name: IncludeEuWest1
         default: true
 
@@ -91,7 +91,7 @@ dependencies:
       - name: CreateVPC
         default: false
       - name: VPCCidr
-        reference: VPCCidr
+        default: "{{ .VPCCidr }}"
       - name: IncludeEuWest1
         default: false
 
@@ -106,7 +106,7 @@ dependencies:
       - name: CreateVPC
         default: false
       - name: VPCCidr
-        reference: VPCCidr
+        default: "{{ .VPCCidr }}"
       - name: IncludeEuWest1
         default: false
 
@@ -121,6 +121,6 @@ dependencies:
       - name: CreateVPC
         default: false
       - name: VPCCidr
-        reference: VPCCidr
+        default: "{{ .VPCCidr }}"
       - name: IncludeEuWest1
         default: false
