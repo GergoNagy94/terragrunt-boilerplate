@@ -77,11 +77,11 @@ dependencies:
       - name: AccountId
         default: "{{ .DevelopmentAccountId }}"
       - name: CreateVPC
-        default: "false"
+        default: "true"
       - name: VPCCidr
         default: "{{ .VPCCidr }}"
       - name: IncludeEuWest1
-        default: true
+        default: "true"
 
   - name: management
     template-url: ./account-template
@@ -92,11 +92,11 @@ dependencies:
       - name: AccountId
         default: "{{ .ManagementAccountId }}"
       - name: CreateVPC
-        default: "false"     
+        default: "false"
       - name: VPCCidr
         default: "{{ .VPCCidr }}"
       - name: IncludeEuWest1
-        default: true
+        default: "false"
 
   - name: monitoring
     template-url: ./account-template
@@ -111,7 +111,7 @@ dependencies:
       - name: VPCCidr
         default: "{{ .VPCCidr }}"
       - name: IncludeEuWest1
-        default: true
+        default: "false"
 
   - name: production
     template-url: ./account-template
@@ -126,4 +126,4 @@ dependencies:
       - name: VPCCidr
         default: "{{ .VPCCidr }}"
       - name: IncludeEuWest1
-        default: true
+        default: "false"
