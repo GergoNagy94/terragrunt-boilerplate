@@ -1,6 +1,6 @@
 locals {
     project         = "terragrunt"
-    project_version = "v2.0.0"
+    project_version = "v1.0.0"
 
     organization_id        = "o-00000000000"
     organization_root_id   = "r-0000"
