@@ -64,6 +64,9 @@ variables:
     type: string
     default: "10.0.0.0/16"
 
+skip_files:
+  - path: "./account-template/**/*"
+
 dependencies:
   - name: development
     template-url: ./account-template
