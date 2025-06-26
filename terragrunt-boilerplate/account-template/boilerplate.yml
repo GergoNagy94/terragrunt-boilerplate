@@ -1,22 +1,30 @@
 variables:
   - name: AccountName
+    description: AWS Account name
     type: string
+    
   - name: AccountId
+    description: AWS Account ID
     type: string
+    
   - name: CreateVPC
+    description: Whether to create VPC configuration
     type: bool
     default: false
+    
   - name: VPCCidr
+    description: VPC CIDR block
     type: string
     default: "10.0.0.0/16"
+    
   - name: IncludeEuWest1
+    description: Whether this account should have eu-west-1 region
     type: bool
     default: false
 
 skip_files:
-  - path: "us-east-1/vpc/terragrunt.hcl"
+  - path: "us-east-1/vpc/**/*"
     if: "{{ not .CreateVPC }}"
+  
   - path: "eu-west-1/**/*"
     if: "{{ not .IncludeEuWest1 }}"
-  - path: "eu-west-1/vpc/terragrunt.hcl"
-    if: "{{ not .CreateVPC }}"

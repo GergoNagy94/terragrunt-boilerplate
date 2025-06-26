@@ -4,6 +4,26 @@ variables:
     type: string
     default: "terragrunt"
 
+  - name: ProjectVersion
+    description: Enter the initial project version
+    type: string
+    default: "v1.0.0"
+
+  - name: OrganizationId
+    description: Enter your AWS Organization ID
+    type: string
+    default: "o-00000000000"
+
+  - name: OrganizationRootId
+    description: Enter your AWS Organization Root ID
+    type: string
+    default: "r-0000"
+
+  - name: DomainName
+    description: Enter your domain name for email addresses
+    type: string
+    default: "example.com"
+
   - name: DevelopmentAccountId
     description: Development AWS Account ID
     type: string
@@ -23,6 +43,16 @@ variables:
     description: Production AWS Account ID
     type: string
     default: "000000000000"
+
+  - name: DefaultRegion
+    description: Enter the default AWS region
+    type: string
+    default: "us-east-1"
+
+  - name: StateRegion
+    description: Enter the AWS region for Terraform state storage
+    type: string
+    default: "us-east-1"
 
   - name: CreateVPC
     description: Create VPC configuration?
@@ -58,6 +88,36 @@ dependencies:
         default: "management"
       - name: AccountId
         default: "{{ .ManagementAccountId }}"
+      - name: CreateVPC
+        default: false
+      - name: VPCCidr
+        reference: VPCCidr
+      - name: IncludeEuWest1
+        default: false
+
+  - name: monitoring
+    template-url: ./account-template
+    output-folder: ./live/monitoring
+    variables:
+      - name: AccountName
+        default: "monitoring"
+      - name: AccountId
+        default: "{{ .MonitoringAccountId }}"
+      - name: CreateVPC
+        default: false
+      - name: VPCCidr
+        reference: VPCCidr
+      - name: IncludeEuWest1
+        default: false
+
+  - name: production
+    template-url: ./account-template
+    output-folder: ./live/production
+    variables:
+      - name: AccountName
+        default: "production"
+      - name: AccountId
+        default: "{{ .ProductionAccountId }}"
       - name: CreateVPC
         default: false
       - name: VPCCidr
