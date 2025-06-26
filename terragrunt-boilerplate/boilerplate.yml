@@ -3,6 +3,9 @@ variables:
     description: Enter the name of your project (lowercase, no spaces)
     type: string
     default: "terragrunt"
+    validations:
+      - required
+      - length-3-20
 
   - name: ProjectVersion
     description: Enter the initial project version
@@ -64,9 +67,63 @@ variables:
     type: string
     default: "10.0.0.0/16"
 
-skip_files:
-  # Skip VPC files if CreateVPC is false
-  - path: "live/development/eu-west-1/vpc/terragrunt.hcl"
-    if: "{{ not .CreateVPC }}"
-  - path: "live/development/us-east-1/vpc/terragrunt.hcl"
-    if: "{{ not .CreateVPC }}"
+dependencies:
+  - name: development-account
+    template-url: ./dependencies/account
+    output-folder: ./live/development
+    variables:
+      - name: AccountName
+        default: "development"
+      - name: AccountId
+        default: "{{ .DevelopmentAccountId }}"
+      - name: CreateVPC
+        reference: CreateVPC
+      - name: VPCCidr
+        reference: VPCCidr
+      - name: HasEuWest1
+        default: true
+
+  - name: management-account
+    template-url: ./dependencies/account
+    output-folder: ./live/management
+    variables:
+      - name: AccountName
+        default: "management"
+      - name: AccountId
+        default: "{{ .ManagementAccountId }}"
+      - name: CreateVPC
+        default: false
+      - name: VPCCidr
+        reference: VPCCidr
+      - name: HasEuWest1
+        default: false
+
+  - name: monitoring-account
+    template-url: ./dependencies/account
+    output-folder: ./live/monitoring
+    variables:
+      - name: AccountName
+        default: "monitoring"
+      - name: AccountId
+        default: "{{ .MonitoringAccountId }}"
+      - name: CreateVPC
+        default: false
+      - name: VPCCidr
+        reference: VPCCidr
+      - name: HasEuWest1
+        default: false
+
+  - name: production-account
+    template-url: ./dependencies/account
+    output-folder: ./live/production
+    variables:
+      - name: AccountName
+        default: "production"
+      - name: AccountId
+        default: "{{ .ProductionAccountId }}"
+      - name: CreateVPC
+        default: false
+      - name: VPCCidr
+        reference: VPCCidr
+      - name: HasEuWest1
+        default: false

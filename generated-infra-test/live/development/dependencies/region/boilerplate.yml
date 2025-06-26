@@ -1,0 +1,23 @@
+variables:
+  - name: RegionName
+    description: AWS Region name
+    type: string
+    default: "us-east-1"
+  
+  - name: AccountName
+    description: AWS Account name
+    type: string
+    
+  - name: CreateVPC
+    description: Whether to create VPC configuration
+    type: bool
+    default: false
+    
+  - name: VPCCidr
+    description: VPC CIDR block
+    type: string
+    default: "10.0.0.0/16"
+
+skip_files:
+  - path: "vpc/terragrunt.hcl"
+    if: "false"
